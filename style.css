@@ -1,0 +1,38 @@
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: orange;
+    padding: 8px 8px;
+    width: 500px;
+}
+
+.footer {
+    width: 500px;
+    background-color: orange;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 8px;
+}
+
+.main {
+    display: flex;
+}
+
+.shoespic {
+    float: left;
+    height: auto;
+    overflow: hidden;
+    background: orangered;
+    width: 40%;
+}
+
+.price1 {
+    float: right;
+    height: auto;
+    overflow: hidden;
+    background: rgb(218, 195, 153);
+    width : 60%;
+    align-items: center;
+}
