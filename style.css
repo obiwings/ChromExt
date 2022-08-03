@@ -5,10 +5,12 @@
     background-color: orange;
     padding: 8px 8px;
     width: 500px;
+    height: 32px;
 }
 
 .footer {
     width: 500px;
+    height: 32px;
     background-color: orange;
     display: flex;
     justify-content: space-between;
@@ -24,15 +26,24 @@
     float: left;
     height: auto;
     overflow: hidden;
-    background: orangered;
+    background: rgb(218, 195, 153);
     width: 40%;
+    text-align: center;
+    display: flex; justify-content: center;
+}
+
+.tabon {
+    max-width: 200px;
+    max-height: 200px;
 }
 
 .price1 {
     float: right;
     height: auto;
     overflow: hidden;
-    background: rgb(218, 195, 153);
+    background: rgb(218, 195, 153); color: white;
     width : 60%;
-    align-items: center;
+    display: flex; justify-content: center;
+    font-size: 24px;
+    line-height: 100px;
 }
