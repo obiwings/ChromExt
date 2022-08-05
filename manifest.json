@@ -10,7 +10,15 @@
     "content_scripts" : [
         {
             "matches" : ["https://kream.co.kr/*"],
-            "js" : ["index.js"]
+            "js" : ["index.js"],
+            "css" : ["style2.css"]
         }
-    ]
+    ],
+    "permissions" : [
+        "tabs",
+        "<all_urls>"
+    ],
+    "content_security_policy" : {
+        "extension_pages" : "script-src 'self'; script-src-elem 'self' https://d3js.org/d3.v5.min.js; object-src 'self'"
+    }
 }
