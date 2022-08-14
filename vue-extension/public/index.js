@@ -1,13 +1,14 @@
 var TestDIV = document.createElement("div");
 TestDIV.innerHTML = `테스트 중 입니다....<br>
+<img src="long_predi.png" alt="logo">
 <div class="vGraph">
     <ul class = "GraphZone">
     <li><span class="gTerm">LSTM</span><span class="gBar" style="height:33%"><span>33%</span></span></li>
-    <li><span class="gTerm">K-NN</span><span class="gBar" style="height:20%"><span>20%</span></span></li>
-    <li><span class="gTerm">Logistic</span><span class="gBar" style="height:30%"><span>30%</span></span></li>
+    <li><span class="gTerm">KNN</span><span class="gBar" style="height:20%"><span>20%</span></span></li>
+    <li><span class="gTerm">Log</span><span class="gBar" style="height:30%"><span>30%</span></span></li>
     <li><span class="gTerm">ANN</span><span class="gBar" style="height:40%"><span>40%</span></span></li>
     <li><span class="gTerm">XGB</span><span class="gBar" style="height:50%"><span>50%</span></span></li>
-    <li><span class="gTerm">RIDGE</span><span class="gBar" style="height:60%"><span>60%</span></span></li>
+    <li><span class="gTerm">RID</span><span class="gBar" style="height:60%"><span>60%</span></span></li>
     <li><span class="gTerm">SVM</span><span class="gBar" style="height:30%"><span>80%</span></span></li>
     <li><span class="gTerm">HMM</span><span class="gBar" style="height:55%"><span>80%</span></span></li>
     <li><span class="gTerm">ADA</span><span class="gBar" style="height:75%"><span>80%</span></span></li>

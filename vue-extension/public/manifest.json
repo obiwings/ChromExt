@@ -1,0 +1,15 @@
+{
+    "name": "Vue extension",
+    "description": "My extension app made by Vue.js",
+    "version": "0.0.1",
+    "manifest_version": 3,
+    "action": {
+      "default_popup": "index.html"
+    },
+    "content_scripts": [
+      {
+        "matches" : ["https://kream.co.kr/products/3"],
+        "js" : ["./index.js"]
+      }
+    ]
+  }

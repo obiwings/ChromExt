@@ -1,0 +1,23 @@
+{
+  "name": "vue-extension",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:extension": "vite build --watch",
+    "build": "vite build",
+    "build:extension": "bestzip dist.zip dist/",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "axios": "^0.27.2",
+    "d3-vs": "^1.3.4",
+    "vue": "^3.2.37"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^3.0.0",
+    "bestzip": "^2.2.1",
+    "vite": "^3.0.0"
+  }
+}
