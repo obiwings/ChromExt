@@ -50,11 +50,10 @@ const site_1_init = async () => {
                 // background.js 로 메세지와 데이터 전송  
                 chrome.runtime.sendMessage({
                     Brand : shoesObject.Brand,
-                    Name : shoesObject.Name,
-                    W : shoesObject["(W)"],
                     ReleaseDate : shoesObject.ReleaseDate,
+                    Woman : shoesObject["(W)"],
                     ReleasePrice : shoesObject.ReleasePrice,
-                    Collabortaion : shoesObject.Collabortaion,
+                    Collab : shoesObject.Collab,
                     ImageURL : shoesObject.ImageURL,                
                 },
                     function(response) {
