@@ -31,18 +31,3 @@ function isEmptyObj(obj) {
 
     return false;
 }
-// =================================================================
-setInterval(async () => {
-    // 여기서 결과가 저장되어 있으면 화면 처리합니다. 
-    let app = await check_cmd('PREDICT_VALUE')
-    if (!isEmptyObj(app)) {
-        //items = document.querySelector('#account')  
-        // 예측 결과를 받아서 화면 조작 처리
-        items = document.querySelector('#related #items')
-        if (items != null) {
-            console.log("items > ", items)
-            items.innerHTML = app['PREDICT_VALUE']
-            await remove_cmd(['PREDICT_VALUE'])
-        }
-    }
-}, 1000)

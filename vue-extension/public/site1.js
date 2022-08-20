@@ -1,4 +1,4 @@
-const CHECK_URL_1 = "https://kream.co.kr/products/" 
+const CHECK_URL_1 = "https://kream.co.kr/products/"
 
 const site_1_init = async () => {
 
@@ -18,17 +18,17 @@ const site_1_init = async () => {
             shoesObject['ReleaseDate'] = document.querySelectorAll('dd.product_info')[1].textContent;
             // ReleasePrice
             shoesObject['ReleasePrice'] = document.querySelectorAll('dd.product_info')[3].textContent;
-            // Collab
+            // Collab?
             if (shoesObject['Name'].includes(' x ')) {
                 shoesObject['Collab'] = 1
             } else {
                 shoesObject['Collab'] = 0
             };
             // 여성용?
-            if (shoesObject['Name'].includes('(W')){
-                shoesObject['(W)'] = 1
+            if (shoesObject['Name'].includes('(W')) {
+                shoesObject['Woman'] = 1
             } else {
-                shoesObject['(W)'] = 0
+                shoesObject['Woman'] = 0
             };
             shoesObject['ImageURL'] = document.getElementsByClassName("image")[0].src;
 
@@ -38,27 +38,47 @@ const site_1_init = async () => {
                 // 화면 조작을 할필요 없다 여기서는 
                 removeAllchild(shoesObject)
                 // 서버로 예측을 보내기 위한 기본 정보 저장
-                chrome.storage.sync.set(
-                shoesObject, async () => {
-                    let temp = await check_cmd(shoesObject)
-                    console.log('---------- 저장된 오브젝트 ----------')
-                    console.log(temp)
-                    console.log('검색어 등록 완료')
-                    // 반복 타이머 종료
-                    clearInterval(tmp)
-                });
-                // background.js 로 메세지와 데이터 전송  
-                chrome.runtime.sendMessage({
-                    Brand : shoesObject.Brand,
-                    ReleaseDate : shoesObject.ReleaseDate,
-                    Woman : shoesObject["(W)"],
-                    ReleasePrice : shoesObject.ReleasePrice,
-                    Collab : shoesObject.Collab,
-                    ImageURL : shoesObject.ImageURL,                
-                },
-                    function(response) {
-                        // callback
-                        console.log(response)
+                // chrome.storage.sync.set(
+                //     shoesObject, async () => {
+                //         let temp = await check_cmd(shoesObject)
+                //         console.log('---------- 저장된 오브젝트 ----------')
+                //         console.log(temp)
+                //         console.log('검색어 등록 완료')
+                //         // 반복 타이머 종료
+                //         clearInterval(tmp)
+                //     });
+                clearInterval(tmp)
+                // 서비스 워커로 메시지 전송
+                let msg = {
+                    brand: shoesObject.Brand,
+                    ReleaseDate: shoesObject.ReleaseDate,
+                    Woman : shoesObject.Woman,
+                    ReleasePrice: shoesObject.ReleasePrice,
+                    Collab: shoesObject.Collab,
+                    ImageURL: shoesObject.ImageURL,
+                }
+                chrome.runtime.sendMessage(msg, (response) => {
+                    fetch('http://127.0.0.1:5000/test', {
+                        method: 'POST', // 또는 'PUT'
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(msg),
+                    })
+                    .then((response) => response.json())
+                    .then((data) => {
+                        console.log('성공:', data);
+                        // 여기서 직접 화면 처리하면됨
+                    })
+                    .catch((error) => {
+                        console.error('실패:', error);
+                    })
+                    .finally(() => {
+                        console.log(4)
+                    });
+                    // callback
+                    console.log('background.js :', response);
+                    // 여기서 결과를 기반으로 화면 처리 마무리
                 });
             } else {
                 console.log('해당 요소를 못찾음')
