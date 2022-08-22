@@ -6,6 +6,7 @@ chrome.runtime.onInstalled.addListener(async () => {
 let SEARCH_KEY = "CHECK"; // 특정 키를 사용하는 것이지 뭔가 값을 받아 오는것이 아님
 chrome.runtime.onMessage.addListener( async (request, sender, sendResponse) => {
     sendResponse('content-script에서 데이터를 받았다잉');
+    console.log('메세지를 받았다잉')
     return true
   }
 );

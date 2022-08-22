@@ -86,6 +86,9 @@ const site_1_init = async () => {
         }, 1000)
     }
 }
+
+
+
 function removeAllchild(ele) {
     if (ele != undefined && ele != null) {
         while (ele.hasChildNodes) {
@@ -95,3 +98,4 @@ function removeAllchild(ele) {
     }
 }
 site_1_init()
+

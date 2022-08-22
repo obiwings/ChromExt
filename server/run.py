@@ -7,8 +7,12 @@ from PIL import Image
 import urllib.request
 from io import BytesIO
 import joblib
+
 # 머신러닝 모델
 from sklearn.cluster import KMeans
+from sklearn.preprocessing import OneHotEncoder, RobustScaler
+from pickle import load
+from tensorflow import keras
 
 
 def change(x):
@@ -69,48 +73,93 @@ def home():
     prediction = KMEANS.predict(imgArray2D)
     testdf['Cluster'] = prediction
     testdf = testdf.drop('ImageURL', axis = 1)
+
+    test2 = testdf
+
+
+
     # 수정된 데이터 출력
     print('-' * 25, '수정된 데이터', '-' * 25)
     print(testdf)
     print('-' * 65)
 
-    # 더미변수 처리
+
+    # 더미변수 처리 (ANN)
         # One-hot Encoder 로드
     brandEncoder = joblib.load('../brandEncoder.joblib')
-    ClusterEncoder = joblib.load('../ClusterEncoder.joblib')
-        # 변수 처리
-    # 데이터 스케일링
-    
-        # 학습데이터의 정보가 들어간 Robust Scaler 로드
-        # 스케일링
+    brandEncoded = brandEncoder.transform(testdf['brand'].values.reshape(-1,1))
+    print('브랜드 인코딩 ok')
 
-    '''
-    ======해야할 일======
-    1. brand와 cluster 더미변수 처리
-      1) sklearn의 One-hot encoding으로 처리.
-      2) 전처리 파일에서 One-hot encoding 돌려보고 만들어지는 더미변수가 get_dummys() 랑 같으면 그냥 하고
-      3) 다르다면 전처리부터 머신러닝까지 새로 모델링
-    2. 데이터 스케일링 - Robust스케일로 표준화
-      1) Scaler도 전처리 파일에서 새로 저장해야됨
-    3. 모델 예측 수행
-    4. site1.js 로 response 받은 데이터를 popup.html에 뿌려주기
-    5. popup.html 재정비
-    6. 가능하다면 전처리를 더 매끄럽게 하고 데이터 양을 늘려서 학습되는 모델 성능을 좀 괜찮게 하고 싶음
-    7. 모든 작업 코드 정리
-    '''
+    ClusterEncoder = joblib.load('../ClusterEncoder.joblib')
+    ClusterEncoded = ClusterEncoder.transform(testdf['Cluster'].values.reshape(-1,1))
+    print('클러스터 인코딩 ok')
+
+    brandEncoded = pd.DataFrame(brandEncoded, columns = brandEncoder.categories_[0])
+    ClusterEncoded = pd.DataFrame(ClusterEncoded, columns = ClusterEncoder.categories_[0])
+
+    testdf = pd.concat([testdf, brandEncoded, ClusterEncoded], axis = 1)
+    print('인코딩 결과 병합 ok')
+
+
+    # 더미변수 처리 (TREE)
+    # Label Encoder 로드
+    brandEncoderLabel = joblib.load('../brandEncoder_Label.joblib')
+    brandEncodedLabel = brandEncoderLabel.transform(test2['brand'].values.reshape(-1,1))
+    brandEncodedLabel = pd.DataFrame(brandEncodedLabel)
+    X2 = pd.concat([test2, brandEncodedLabel], axis = 1)
+    X2 = X2.drop('brand', axis = 1)
+    X2.rename(columns={0 : 'brand'}, inplace= True)
+
+    testdf = testdf.drop('brand', axis = 1)
+    testdf = testdf.drop('Cluster', axis = 1)
+
+    
+    # 독립변수와 종속변수로 나누기
+    X = testdf
+
+    # 변수 처리
+    # 데이터 스케일링
+    Scaler = load(open('../RobustScaler.pkl', 'rb'))
+    X1 = Scaler.transform(X)
+
+    ScalerL = load(open('../RobustScaler_tree.pkl', 'rb'))
+    X3 = ScalerL.transform(X2)
 
 
     # 3. 모델 로드
-    KNN = joblib.load('../SD_KNN(Tuning)_model.pkl')
-    LGBM = joblib.load('../SD_LGBM(Tuning)_model.pkl')
+    SD_keras_model = keras.models.load_model("../SD_Tensorflow_model.hdf5")
+    SD_RF_model = joblib.load('../SD_RandomForestModel.pkl')
+    SD_LGBM_model = joblib.load('../SD_LightGBMModel.pkl')
+    SD_XGB_model = joblib.load('../SD_XGBoostModel.pkl')
+    SD_GB_model = joblib.load('../SD_GradientBoostModel.pkl')
+
     # 4. 예측 수행
+    predANN = SD_keras_model.predict(X1)
+    predRF = SD_RF_model.predict(X3)
+    predLGBM = SD_LGBM_model.predict(X3)
+    predXGB = SD_XGB_model.predict(X3)
+    predGB = SD_GB_model.predict(X3)
+
+    print('PREDICT VALUE_ANN :', predANN, '원')
+    print('PREDICT VALUE_RF :', predRF, '원')
+    print('PREDICT VALUE_LGBM :', predLGBM, '원')
+    print('PREDICT VALUE_XGB :', predXGB, '원')
+    print('PREDICT VALUE_GB :', predGB, '원')
+
+    predANN = np.array2string(predANN)
+    predRF = np.array2string(predRF)
+    predLGBM = np.array2string(predLGBM)
+    predXGB = np.array2string(predXGB)
+    predGB = np.array2string(predGB)
+
     # 5. 응답 처리
-    return jsonify( {'data':'데이터 전송 완료및 통신 성공'} )
-    # else:
-    #     results = {
-    #         'code':0
-    #     }
-    #     return jsonify( results )
+    return jsonify( {
+        'ANN_VALUE' : predANN,
+        'RF_VALUE' : predRF,
+        'LGBM_VALUE' : predLGBM,
+        'XGB_VALUE' : predXGB,
+        'GB_VALUE' : predGB
+    } )
 
 if __name__ == '__main__':
     app.run(debug=True)
