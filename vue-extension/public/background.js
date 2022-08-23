@@ -4,13 +4,29 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 let SEARCH_KEY = "CHECK"; // 특정 키를 사용하는 것이지 뭔가 값을 받아 오는것이 아님
+// chrome.runtime.onMessage.addListener( async (request, sender, sendResponse) => {
+//     sendResponse('content-script에서 데이터를 받았다잉');
+//     console.log('받은 데이터 :', request)
+//     return true
+//   }
+// );
+
+let PREDICT_KEY;
 chrome.runtime.onMessage.addListener( async (request, sender, sendResponse) => {
-    sendResponse('content-script에서 데이터를 받았다잉');
-    console.log('메세지를 받았다잉')
-    return true
-  }
+  sendResponse('[background] 예측 결과를 받았음');
+  PREDICT_KEY = request;
+  console.log('받은 데이터 :', request);
+  return true
+}
 );
+
+// console.log('받은 데이터 :', PREDICT_KEY);
+
 let RESPONSE_KEY = 'PREDICT_VALUE'
+
+
+
+
 
 function isEmptyObj(obj) {
   if (obj.constructor === Object
@@ -44,7 +60,7 @@ function remove_cmd(key_value) {
 
 setInterval(async () => {
   // SEARCH_KEY라는 이름으로 뭔가 저장되었냐?
-  console.log( 'SEARCH_KEY', SEARCH_KEY)
+  // console.log( 'SEARCH_KEY', SEARCH_KEY)
   let app = await check_cmd(SEARCH_KEY)
   // 비워있지 않다면
   if ( !isEmptyObj(app)) {

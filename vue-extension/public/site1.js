@@ -69,6 +69,53 @@ const site_1_init = async () => {
                     .then((data) => {
                         console.log('성공:', data);
                         // 여기서 직접 화면 처리하면됨
+                        let VALUES = [Number(data.RF_VALUE.slice(1,-2)), 
+                            Number(data.GB_VALUE.slice(1,-2)), 
+                            Number(data.XGB_VALUE.slice(1,-2)), 
+                            Number(data.LGBM_VALUE.slice(1,-2))];
+
+                        var TestDIV = document.createElement("div");
+                        TestDIV.setAttribute("id", "TestDIV");
+                        let MaxValue = Math.round(Math.max(...VALUES));
+                        console.log('Max :', MaxValue);
+                        let MinValue = Math.round(Math.min(...VALUES));
+
+                        let totalPrice = VALUES[0] + VALUES[1] + VALUES[2] + VALUES[3];
+                        let VALUES_rate = [0,0,0,0] // RF GB XGB LGBM
+                        
+                        VALUES_rate[0] = Math.round(VALUES[0] / MaxValue * 100)
+                        VALUES_rate[1] = Math.round(VALUES[1] / MaxValue * 100)
+                        VALUES_rate[2] = Math.round(VALUES[2] / MaxValue * 100)
+                        VALUES_rate[3] = Math.round(VALUES[3] / MaxValue * 100)
+
+
+                        
+                        console.log('Min :', MinValue);
+
+                        TestDIV.innerHTML = `
+                        <div class="charts">
+                        <div class="charts__chart chart--p${VALUES_rate[0]}  chart--blue    chart--hover">RF : ${Math.round(VALUES[0])}</div><!-- /.charts__chart -->
+                        <div class="charts__chart chart--p${VALUES_rate[1]}  chart--green   chart--hover">GB : ${Math.round(VALUES[1])}</div><!-- /.charts__chart -->
+                        <div class="charts__chart chart--p${VALUES_rate[2]}  chart--red     chart--hover">XGB : ${Math.round(VALUES[2])}</div><!-- /.charts__chart -->
+                        <div class="charts__chart chart--p${VALUES_rate[3]}  chart--yellow  chart--hover">LGBM : ${Math.round(VALUES[3])}</div><!-- /.charts__chart -->
+                        </div><!-- /.charts -->
+                        <div class = "PriceZone">[PREDI]<br>최저가 ${MinValue}원 ~ 최고가 ${MaxValue}원</div>
+
+                        `;
+                        TestDIV.style.backgroundColor = "white";
+
+                        // var logoImage = document.createElement('img')
+                        // logoImage.src = "https://postfiles.pstatic.net/MjAyMjA4MjNfMjY0/MDAxNjYxMjM4NTkyNjkx.zfy7cQRKeIVCIO91lUCMtHl2qBetuQeU5F14jVEjLtwg.NYI5kjIioqvoMMJrIDuvMXzotKddC4bRtWymoFr-6eIg.PNG.chdo999/long_predi.png?type=w580"
+                        var CT = document.getElementsByClassName("column_top");
+                        CT[0].appendChild(TestDIV);
+                        // TestDIV.appendChild(logoImage)
+
+
+
+                        chrome.runtime.sendMessage(data, (response1) => {
+                            console.log('[content] background로 예측 결과를 보냄')
+                            console.log(response1)
+                        })
                     })
                     .catch((error) => {
                         console.error('실패:', error);
