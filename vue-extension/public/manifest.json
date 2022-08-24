@@ -1,7 +1,7 @@
 {
-    "name": "Vue extension",
+    "name": "pREdi_v1",
     "description": "My extension app made by Vue.js",
-    "version": "0.0.1",
+    "version": "1.0.1",
     "manifest_version": 3,
 
     "action": {

@@ -88,7 +88,7 @@ const site_1_init = async () => {
                         VALUES_rate[2] = Math.round(VALUES[2] / MaxValue * 100)
                         VALUES_rate[3] = Math.round(VALUES[3] / MaxValue * 100)
 
-
+                        let RelP = shoesObject.ReleasePrice.slice(1,-2).replace(',', '');
                         
                         console.log('Min :', MinValue);
 
@@ -99,8 +99,9 @@ const site_1_init = async () => {
                         <div class="charts__chart chart--p${VALUES_rate[2]}  chart--red     chart--hover">XGB : ${Math.round(VALUES[2])}</div><!-- /.charts__chart -->
                         <div class="charts__chart chart--p${VALUES_rate[3]}  chart--yellow  chart--hover">LGBM : ${Math.round(VALUES[3])}</div><!-- /.charts__chart -->
                         </div><!-- /.charts -->
-                        <div class = "PriceZone">[PREDI]<br>최저가 ${MinValue}원 ~ 최고가 ${MaxValue}원</div>
-
+                        <div class = "PriceZone">[PREDI]<br>최저가 ${MinValue}원 ~ 최고가 ${MaxValue}원<br>평균 예측 가격 : ${(totalPrice/4).toFixed(2)}원
+                        <br> 당당치킨 ${Math.round(((totalPrice/4) - RelP) / 7000)} 마리 이득
+                        </div>
                         `;
                         TestDIV.style.backgroundColor = "white";
 
